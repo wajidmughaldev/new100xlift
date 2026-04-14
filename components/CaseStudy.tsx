@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, FolderKanban } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -9,9 +9,12 @@ import 'swiper/css'
 
 import FeatureStrip from './FeatureStrip'
 import SectionIntro from './SectionIntro'
+import PopupShell from './popup/popup-shell'
+import CaseStudyPopupContent from './popup/case-study-popup-content'
+import type { OtherProjectItem } from './popup/showcase-other-projects-slider'
 
 type CaseStudyItem = {
-  id: number
+  id: number | string
   title: string
   image: string
   techLabel: string
@@ -56,11 +59,43 @@ const caseStudies: CaseStudyItem[] = [
 const tagClassName =
   'inline-flex items-center rounded-full bg-[#566f0c] px-3 py-1 text-[0.72rem] font-medium text-[#dbff72] sm:text-[0.68rem]'
 
+const popupStorageKey = '100xlift-case-study-popup'
+
+const getStoredCaseStudy = (): CaseStudyItem | null => {
+  if (typeof window === 'undefined') return null
+
+  const storedValue = window.localStorage.getItem(popupStorageKey)
+
+  if (!storedValue) return null
+
+  try {
+    return JSON.parse(storedValue) as CaseStudyItem
+  } catch {
+    window.localStorage.removeItem(popupStorageKey)
+    return null
+  }
+}
+
 const truncateTitle = (title: string) =>
   title.length > 50 ? `${title.slice(0, 50)}...` : title
 
 const CaseStudy = () => {
   const swiperRef = useRef<SwiperType | null>(null)
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudyItem | null>(
+    getStoredCaseStudy
+  )
+
+  useEffect(() => {
+    if (!selectedCaseStudy) {
+      window.localStorage.removeItem(popupStorageKey)
+      return
+    }
+
+    window.localStorage.setItem(
+      popupStorageKey,
+      JSON.stringify(selectedCaseStudy)
+    )
+  }, [selectedCaseStudy])
 
   const handlePrev = () => {
     if (!swiperRef.current) return
@@ -70,6 +105,30 @@ const CaseStudy = () => {
   const handleNext = () => {
     if (!swiperRef.current) return
     swiperRef.current.slideNext()
+  }
+
+  const handleOpenOtherProject = (project: OtherProjectItem) => {
+    setSelectedCaseStudy({
+      id: project.id,
+      title: project.title,
+      image: project.image,
+      techLabel: 'Tech Stack',
+      techValue: project.techValue,
+      tags: project.tags,
+      description: project.description,
+    })
+
+    window.requestAnimationFrame(() => {
+      document.querySelector('[role="dialog"]')?.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    })
+  }
+
+  const handleClosePopup = () => {
+    window.localStorage.removeItem(popupStorageKey)
+    setSelectedCaseStudy(null)
   }
 
   return (
@@ -203,7 +262,7 @@ const CaseStudy = () => {
                     </div>
 
                     <div className="relative mx-auto mt-5 max-w-[98%] sm:max-w-[94%]">
-                      <p className="text-[0.92rem] font-light leading-[1.34] text-[var(--muted-fg)] dark:text-white/72 sm:text-xs sm:leading-[1.3]">
+                      <p className="text-[1rem] font-medium leading-[1.45] text-[var(--page-fg)] dark:text-white/82 sm:text-[0.95rem] sm:leading-[1.4]">
                         {study.description} {study.description}
                       </p>
                       <div
@@ -214,6 +273,7 @@ const CaseStudy = () => {
 
                     <button
                       type="button"
+                      onClick={() => setSelectedCaseStudy(study)}
                       className="mt-5 text-[0.9rem] font-medium text-[var(--page-fg)] transition hover:text-[#d6ff56] sm:text-xs"
                     >
                       Read More
@@ -225,6 +285,23 @@ const CaseStudy = () => {
           ))}
         </Swiper>
       </div>
+
+      <PopupShell
+        isOpen={Boolean(selectedCaseStudy)}
+        onClose={handleClosePopup}
+        title={selectedCaseStudy ? `${selectedCaseStudy.title} case study details` : 'Case study details'}
+        closeOnEscape={false}
+      >
+        {selectedCaseStudy ? (
+          <CaseStudyPopupContent
+            title={selectedCaseStudy.title}
+            techValue={selectedCaseStudy.techValue}
+            description={selectedCaseStudy.description}
+            heroImage={selectedCaseStudy.image}
+            onOpenOtherProject={handleOpenOtherProject}
+          />
+        ) : null}
+      </PopupShell>
     </section>
   )
 }

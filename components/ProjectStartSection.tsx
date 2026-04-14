@@ -28,10 +28,10 @@ const ProjectStartSection = () => {
   }
 
   return (
-    <section className="mx-auto w-full max-w-[1120px] px-4 py-10 text-[var(--page-fg)]">
+    <section className="mx-auto w-full max-w-[1120px] px-0 py-10 text-[var(--page-fg)] sm:px-4">
       <div className="overflow-hidden rounded-[24px] border border-[var(--outline-soft)] bg-[var(--panel-bg)] lg:grid lg:grid-cols-[55%_45%]">
         <div
-          className="relative flex flex-col px-5 py-6 sm:min-h-[620px] sm:px-8 sm:py-8 lg:min-h-[720px] lg:justify-between lg:px-10 lg:py-10"
+          className="relative flex flex-col px-4 py-6 sm:min-h-[620px] sm:px-8 sm:py-8 lg:min-h-[720px] lg:justify-between lg:px-10 lg:py-10"
           style={{
             backgroundColor: '#000',
             backgroundImage: "url('/banner-bg-gradient.png')",
@@ -78,7 +78,7 @@ const ProjectStartSection = () => {
           <IconStrip items={iconItems} className="mt-5 gap-3 sm:gap-4 lg:mt-0" openInNewTab={false} />
         </div>
 
-        <div className="flex min-h-[520px] min-w-0 flex-col justify-between bg-[var(--panel-bg)] px-5 py-6 sm:min-h-[620px] sm:px-8 sm:py-8 lg:min-h-[720px] lg:px-10 lg:py-10">
+        <div className="flex min-h-[520px] min-w-0 flex-col justify-between bg-[var(--panel-bg)] px-4 py-6 sm:min-h-[620px] sm:px-8 sm:py-8 lg:min-h-[720px] lg:px-10 lg:py-10">
           <div className="min-w-0">
             <h2 className="text-[2rem] font-base leading-[1.02] tracking-[-0.05em] sm:text-[2.35rem] lg:text-[3.1rem]">
               <span className="text-[#BFEF2E]">What Service</span>

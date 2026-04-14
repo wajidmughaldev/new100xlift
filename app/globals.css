@@ -118,6 +118,31 @@ html {
   overflow-x: hidden;
 }
 
+.popup-scrollbar-hidden {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.popup-scrollbar-hidden::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html.popup-page-locked,
+body.popup-page-locked {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html.popup-page-locked::-webkit-scrollbar,
+body.popup-page-locked::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 @keyframes theme-toggle-in {
   0% {
     opacity: 0;
@@ -156,6 +181,26 @@ html {
   transform-origin: center center;
   animation: banner-bg-motion 6.5s ease-in-out infinite;
   will-change: transform;
+}
+
+@keyframes popup-rise {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes popup-drop {
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 .dark {
