@@ -1,25 +1,54 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 
 import IconStrip from './IconStrip'
 import PopupShell from './popup/popup-shell'
 import OffshorePopupContent from './popup/offshore-popup-content'
 
-const footerLinks = ['Home', 'Works', 'Process', 'Contact']
+const footerLinks = [
+  { href: '#case-studies', label: 'Works' },
+  { href: '#process', label: 'Process' },
+  { href: '#contact', label: 'Contact' },
+]
 
 const footerIcons = [
-  { href: 'https://facebook.com', label: 'Facebook', iconSrc: '/icons/facebook.png' },
-  { href: 'https://linkedin.com', label: 'LinkedIn', iconSrc: '/icons/linkedin.png' },
+  { href: 'https://www.facebook.com/profile.php?id=61586106101272', label: 'Facebook', iconSrc: '/icons/facebook.png' },
+  { href: 'https://www.linkedin.com/company/110819732', label: 'LinkedIn', iconSrc: '/icons/linkedin.png' },
   { href: 'https://instagram.com', label: 'Instagram', iconSrc: '/icons/instagram.png' },
-  { href: 'mailto:project@100xlift.com', label: 'Email', iconSrc: '/icons/email.png' },
-  { href: 'tel:+923111960100', label: 'Phone', iconSrc: '/icons/phone-call.png' },
-  { href: 'https://wa.me/923111960100', label: 'WhatsApp', iconSrc: '/icons/whatsapp.png' },
+  { href: 'mailto:100xlift@gmail.com', label: 'Email', iconSrc: '/icons/email.png' },
+  { href: 'tel:+923361815141', label: 'Phone', iconSrc: '/icons/phone-call.png' },
+  { href: 'https://wa.me/923361815141', label: 'WhatsApp', iconSrc: '/icons/whatsapp.png' },
 ]
 
 const SiteFooter = () => {
   const [isOffshoreOpen, setIsOffshoreOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState(footerLinks[0].href)
+  const sectionIds = useMemo(() => footerLinks.map((link) => link.href.replace('#', '')), [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY + 180
+      let currentHref = footerLinks[0].href
+
+      sectionIds.forEach((id, index) => {
+        const section = document.getElementById(id)
+        if (!section) return
+
+        if (offset >= section.offsetTop) {
+          currentHref = footerLinks[index].href
+        }
+      })
+
+      setActiveSection(currentHref)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [sectionIds])
 
   return (
     <>
@@ -29,21 +58,25 @@ const SiteFooter = () => {
             <div>
               <p className="text-[16px] font-medium leading-none">Contact us at:</p>
               <a
-                href="mailto:project@100xlift.com"
+                href="mailto:100xlift@gmail.com"
                 className="mt-1 inline-block text-[16px] font-base text-[#314100] dark:text-[#BFEF2E]"
               >
-                project@100xlift.com
+                100xlift@gmail.com
               </a>
             </div>
 
             <div className="flex flex-wrap items-center gap-5 text-[14px] font-base">
               {footerLinks.map((link) => (
                 <a
-                  key={link}
-                  href="#"
-                  className="border-b border-[#8fb109] pb-1"
+                  key={link.label}
+                  href={link.href}
+                  className={`border-b pb-1 transition-colors ${
+                    activeSection === link.href
+                      ? 'border-[#BFEF2E] text-[#314100] dark:text-[#BFEF2E]'
+                      : 'border-[#8fb109]'
+                  }`}
                 >
-                  {link}
+                  {link.label}
                 </a>
               ))}
               <button

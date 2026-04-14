@@ -2,21 +2,31 @@
 
 import React, { useState } from 'react'
 import { Send } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import IconStrip from './IconStrip'
 import { submitLeadForm } from '@/lib/lead-form'
+import ThemeSelect from './ui/theme-select'
 
 const iconItems = [
-  { href: 'https://facebook.com', label: 'Facebook', iconSrc: '/icons/facebook.png' },
-  { href: 'https://linkedin.com', label: 'LinkedIn', iconSrc: '/icons/linkedin.png' },
+  { href: 'https://www.facebook.com/profile.php?id=61586106101272', label: 'Facebook', iconSrc: '/icons/facebook.png' },
+  { href: 'https://www.linkedin.com/company/110819732', label: 'LinkedIn', iconSrc: '/icons/linkedin.png' },
   { href: 'https://instagram.com', label: 'Instagram', iconSrc: '/icons/instagram.png' },
-  { href: 'mailto:project@100xlift.com', label: 'Email', iconSrc: '/icons/email.png' },
-  { href: 'tel:+923111960100', label: 'Phone', iconSrc: '/icons/phone-call.png' },
-  { href: 'https://wa.me/923111960100', label: 'WhatsApp', iconSrc: '/icons/whatsapp.png' },
+  { href: 'mailto:100xlift@gmail.com', label: 'Email', iconSrc: '/icons/email.png' },
+  { href: 'tel:+923361815141', label: 'Phone', iconSrc: '/icons/phone-call.png' },
+  { href: 'https://wa.me/923361815141', label: 'WhatsApp', iconSrc: '/icons/whatsapp.png' },
 ]
 
 const serviceTags = ['Website Development', 'UI/UX Designing', 'SEO/AEO']
+const phoneCodeOptions = [{ label: '+92', value: '+92' }]
+const budgetOptions = [
+  { label: 'Less Than 100', value: 'Less Than 100' },
+  { label: '100 - 300', value: '100 - 300' },
+  { label: '300 - 500', value: '300 - 500' },
+  { label: '500 - 1,000', value: '500 - 1,000' },
+  { label: '1,000 - 2,500', value: '1,000 - 2,500' },
+  { label: '2,500+', value: '2,500+' },
+]
 
 type ProjectStartFormValues = {
   services: string[]
@@ -45,6 +55,7 @@ const ProjectStartSection = () => {
     setValue,
     watch,
     clearErrors,
+    control,
     formState: { errors },
   } = useForm<ProjectStartFormValues>({
     mode: 'onChange',
@@ -146,10 +157,10 @@ const ProjectStartSection = () => {
               </div>
 
               <a
-                href="mailto:project@100xlift.com"
+                href="mailto:100xlift@gmail.com"
                 className="text-[0.78rem] font-semibold text-white sm:pt-6 sm:text-[16px]"
               >
-                project@100xlift.com
+                100xlift@gmail.com
               </a>
             </div>
 
@@ -245,12 +256,18 @@ const ProjectStartSection = () => {
                 <div className="grid min-w-0 gap-2">
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Phone</span>
                   <div className="grid min-w-0 grid-cols-[84px_minmax(0,1fr)] gap-2 sm:grid-cols-[88px_minmax(0,1fr)]">
-                    <select
-                      className={inputClass(false).replace('px-4', 'px-3')}
-                      {...register('phoneCode')}
-                    >
-                      <option>+92</option>
-                    </select>
+                    <Controller
+                      control={control}
+                      name="phoneCode"
+                      render={({ field }) => (
+                        <ThemeSelect
+                          value={field.value}
+                          onChange={field.onChange}
+                          options={phoneCodeOptions}
+                          buttonClassName="h-10 px-3"
+                        />
+                      )}
+                    />
                     <input
                       type="text"
                       className={inputClass(Boolean(errors.phoneNumber))}
@@ -268,17 +285,20 @@ const ProjectStartSection = () => {
                 </div>
                 <label className="grid min-w-0 gap-2">
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Select Budget</span>
-                  <select
-                    className={inputClass(Boolean(errors.budget))}
-                    {...register('budget', { required: 'Select a budget range.' })}
-                  >
-                    <option>Less Than 100</option>
-                    <option>100 - 300</option>
-                    <option>300 - 500</option>
-                    <option>500 - 1,000</option>
-                    <option>1,000 - 2,500</option>
-                    <option>2,500+</option>
-                  </select>
+                  <Controller
+                    control={control}
+                    name="budget"
+                    rules={{ required: 'Select a budget range.' }}
+                    render={({ field }) => (
+                      <ThemeSelect
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={budgetOptions}
+                        error={Boolean(errors.budget)}
+                        buttonClassName="h-10"
+                      />
+                    )}
+                  />
                   {errors.budget ? <span className="text-xs font-medium text-[#d75b5b]">{errors.budget.message}</span> : null}
                 </label>
               </div>

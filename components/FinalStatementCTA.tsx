@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { ArrowUpRight, Phone } from 'lucide-react'
 
@@ -6,6 +8,14 @@ import { CTAButton } from './ui/cta-button'
 const highlightClassName = 'bg-[#a8d400] px-2 py-0.5 text-black sm:px-3 sm:py-1'
 
 const FinalStatementCTA = () => {
+  const openCalendarModal = () => {
+    window.dispatchEvent(new Event('open-calendar-modal'))
+  }
+
+  const openProposalModal = () => {
+    window.dispatchEvent(new Event('open-proposal-modal'))
+  }
+
   return (
     <section className="mx-auto w-full max-w-[1120px] px-4 py-10 text-center text-[var(--page-fg)]">
       <div className="space-y-6">
@@ -37,6 +47,7 @@ const FinalStatementCTA = () => {
             text="Book a Discovery Call"
             icon={<Phone size={22} strokeWidth={2.6} />}
             className="text-[15px] font-semibold sm:text-[18px]"
+            onClick={openCalendarModal}
           />
 
           <CTAButton
@@ -44,6 +55,7 @@ const FinalStatementCTA = () => {
             text="Request a Digital Audit"
             icon={<ArrowUpRight size={22} strokeWidth={2.6} />}
             className="min-h-[48px] px-5 text-[15px] font-semibold sm:min-h-[56px] sm:px-7 sm:text-[18px]"
+            onClick={openProposalModal}
           />
         </div>
       </div>
