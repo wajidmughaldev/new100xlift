@@ -9,9 +9,9 @@ const Whyus = () => {
         { href: "https://www.facebook.com/profile.php?id=61586106101272", label: "Facebook", iconSrc: "/icons/facebook.png" },
         { href: "https://www.linkedin.com/company/110819732", label: "LinkedIn", iconSrc: "/icons/linkedin.png" },
         { href: "https://instagram.com", label: "Instagram", iconSrc: "/icons/instagram.png" },
-        { href: "mailto:hello@example.com", label: "Email", iconSrc: "/icons/email.png" },
+        { href: "mailto:100xlift@gmail.com", label: "Email", iconSrc: "/icons/email.png" },
         { href: "tel:+923361815141", label: "Phone", iconSrc: "/icons/phone-call.png" },
-        { href: "https://wa.me/+923361815141", label: "WhatsApp", iconSrc: "/icons/whatsapp.png" },
+        { href: "https://wa.me/923361815141", label: "WhatsApp", iconSrc: "/icons/whatsapp.png" },
     ]
 
     return (

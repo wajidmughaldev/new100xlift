@@ -109,6 +109,7 @@ body {
   color: var(--page-fg);
   font-family: inter, Helvetica, sans-serif;
   overflow-x: hidden;
+  cursor: url('/cursor/cursor1.png') 4 4, auto;
   transition:
     background-color 220ms ease,
     color 220ms ease;
@@ -116,6 +117,34 @@ body {
 
 html {
   overflow-x: hidden;
+}
+
+a,
+button,
+[role='button'],
+input,
+textarea,
+select,
+label,
+summary {
+  cursor: url('/cursor/cursor2.png') 4 4, pointer;
+}
+
+select {
+  background-color: var(--panel-strong);
+  color: var(--page-fg);
+}
+
+option {
+  background-color: var(--panel-bg);
+  color: var(--page-fg);
+}
+
+option:checked,
+option:hover,
+option:focus {
+  background-color: var(--accent-lime);
+  color: #101408;
 }
 
 .popup-scrollbar-hidden {

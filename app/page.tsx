@@ -85,12 +85,12 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/icon.svg`,
   image: `${siteUrl}/100xlift-building.png`,
-  email: 'project@100xlift.com',
+  email: '100xlift@gmail.com',
   sameAs: [
     'https://www.facebook.com/profile.php?id=61586106101272',
     'https://www.linkedin.com/company/110819732',
     'https://instagram.com',
-    'https://wa.me/923111960100',
+    'https://wa.me/923361815141',
   ],
 }
 
@@ -111,7 +111,7 @@ const serviceSchema = {
   description:
     '100XLift helps businesses improve digital presence, trust, clarity, conversion, and lead generation through websites, UX, systems, and branding.',
   areaServed: 'Worldwide',
-  email: 'project@100xlift.com',
+  email: '100xlift@gmail.com',
 }
 
 const faqSchema = {
@@ -163,41 +163,41 @@ const page = () => {
       <main id='main-content' className='w-11/12 mx-auto'>
 
         <Navigation/>
-        <div id="home">
+        <div id="top">
           <Banner/>
         </div>
         <SectionSpacer size='2xl'/>
         <TheRealProblem/>
         <SectionSpacer size='2xl'/>
-        <div id="services">
-          <WhatChange/>
-        </div>
+        <WhatChange/>
         <SectionSpacer size='2xl'/>
-        <div id="projects">
+        <div id="services" className="scroll-mt-28 md:scroll-mt-36">
           <NowIntroducing/>
         </div>
       <SectionSpacer size='2xl'/>
-      <div id="case-studies" className="relative left-1/2 w-screen -translate-x-1/2">
+      <div id="case-studies" className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-28 md:scroll-mt-36">
         <CaseStudy/>
       </div>
       <SectionSpacer size='2xl'/>
         <Whyus/>
         <SectionSpacer size='2xl'/>
-        <OurProcess/>
+        <div id="process" className="scroll-mt-28 md:scroll-mt-36">
+          <OurProcess/>
+        </div>
         <SectionSpacer size='2xl'/>
       <FixFirstCallout/>
       <SectionSpacer size='2xl'/>
-      <div id="testimonials" className="relative left-1/2 w-screen -translate-x-1/2">
+      <div id="testimonials" className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-28 md:scroll-mt-36">
         <Testimonials cardsVisible={3} />
       </div>
         <SectionSpacer size='2xl'/>
-        <div id="faqs">
+        <div id="faqs" className="scroll-mt-28 md:scroll-mt-36">
           <QuestionsFAQ/>
         </div>
         <SectionSpacer size='2xl'/>
         <FinalStatementCTA/>
         <SectionSpacer size='2xl'/>
-        <div id="contact">
+        <div id="contact" className="scroll-mt-28 md:scroll-mt-36">
           <ProjectStartSection/>
         </div>
         <SectionSpacer size='2xl'/>

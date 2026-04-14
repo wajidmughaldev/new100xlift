@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 
@@ -48,6 +50,9 @@ const FixFirstCallout = () => {
             variant="secondary"
             text="Let's Start a Project"
             className="mt-8 min-h-[46px] px-5 text-[14px] font-semibold sm:mt-9 sm:min-h-[52px] sm:px-6 sm:text-[15px]"
+            onClick={() => {
+              window.location.hash = 'contact'
+            }}
           />
         </div>
       </div>

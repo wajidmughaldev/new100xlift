@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import { Handshake,MoveUpRight } from 'lucide-react'
@@ -159,7 +161,14 @@ const NowIntroducing = () => {
       </div>
 
             <div className='flex justify-center'>
-            <CTAButton variant="secondary" text='Talk About Your Project' icon={<MoveUpRight size={18} strokeWidth={2} />}/>
+            <CTAButton
+              variant="secondary"
+              text='Talk About Your Project'
+              icon={<MoveUpRight size={18} strokeWidth={2} />}
+              onClick={() => {
+                window.location.hash = 'contact'
+              }}
+            />
 
             </div>
 

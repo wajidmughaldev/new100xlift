@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowUpRight, X } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { submitLeadForm } from '@/lib/lead-form'
+import ThemeSelect from './ui/theme-select'
 
 type ProposalRequestModalProps = {
   isOpen: boolean
@@ -40,6 +41,26 @@ const textareaClassName = (hasError: boolean) =>
 
 const labelClassName = 'text-sm font-semibold text-[#101408] dark:text-white'
 const errorClassName = 'text-xs font-medium text-[#b13f3f] dark:text-[#ff8f8f]'
+const proposalTypeOptions = [
+  { label: 'Web App', value: 'Web App' },
+  { label: 'Website', value: 'Website' },
+  { label: 'UI/UX Design', value: 'UI/UX Design' },
+  { label: 'SEO', value: 'SEO' },
+  { label: 'Branding', value: 'Branding' },
+]
+const budgetOptions = [
+  { label: 'Select budget', value: '', disabled: true },
+  { label: 'Less than $1,000', value: 'Less than $1,000' },
+  { label: '$1,000 - $3,000', value: '$1,000 - $3,000' },
+  { label: '$3,000 - $7,500', value: '$3,000 - $7,500' },
+  { label: '$7,500+', value: '$7,500+' },
+]
+const timelineOptions = [
+  { label: 'ASAP', value: 'ASAP' },
+  { label: '2 - 4 weeks', value: '2 - 4 weeks' },
+  { label: '1 - 2 months', value: '1 - 2 months' },
+  { label: 'Flexible', value: 'Flexible' },
+]
 
 const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -48,6 +69,7 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<ProposalFormValues>({
     mode: 'onChange',
@@ -237,46 +259,57 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-2">
               <span className={labelClassName}>Project type</span>
-              <select
-                className={inputClassName(Boolean(errors.projectType))}
-                {...register('projectType', { required: 'Select a project type.' })}
-              >
-                <option>Web App</option>
-                <option>Website</option>
-                <option>UI/UX Design</option>
-                <option>SEO</option>
-                <option>Branding</option>
-              </select>
+              <Controller
+                control={control}
+                name="projectType"
+                rules={{ required: 'Select a project type.' }}
+                render={({ field }) => (
+                  <ThemeSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={proposalTypeOptions}
+                    error={Boolean(errors.projectType)}
+                  />
+                )}
+              />
               {errors.projectType ? <span className={errorClassName}>{errors.projectType.message}</span> : null}
             </label>
 
             <label className="grid gap-2">
               <span className={labelClassName}>Budget</span>
-              <select
-                className={inputClassName(Boolean(errors.budget))}
-                {...register('budget', { required: 'Select a budget range.' })}
-              >
-                <option value="" disabled>Select budget</option>
-                <option>Less than $1,000</option>
-                <option>$1,000 - $3,000</option>
-                <option>$3,000 - $7,500</option>
-                <option>$7,500+</option>
-              </select>
+              <Controller
+                control={control}
+                name="budget"
+                rules={{ required: 'Select a budget range.' }}
+                render={({ field }) => (
+                  <ThemeSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={budgetOptions}
+                    placeholder="Select budget"
+                    error={Boolean(errors.budget)}
+                  />
+                )}
+              />
               {errors.budget ? <span className={errorClassName}>{errors.budget.message}</span> : null}
             </label>
           </div>
 
           <label className="grid gap-2">
             <span className={labelClassName}>Timeline</span>
-            <select
-              className={inputClassName(Boolean(errors.timeline))}
-              {...register('timeline', { required: 'Select a timeline.' })}
-            >
-              <option>ASAP</option>
-              <option>2 - 4 weeks</option>
-              <option>1 - 2 months</option>
-              <option>Flexible</option>
-            </select>
+            <Controller
+              control={control}
+              name="timeline"
+              rules={{ required: 'Select a timeline.' }}
+              render={({ field }) => (
+                <ThemeSelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={timelineOptions}
+                  error={Boolean(errors.timeline)}
+                />
+              )}
+            />
             {errors.timeline ? <span className={errorClassName}>{errors.timeline.message}</span> : null}
           </label>
 

@@ -254,7 +254,7 @@ const CaseStudy = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCaseStudy(study)}
-                      className="mt-5 text-[0.9rem] font-medium text-[var(--page-fg)] transition hover:text-[#d6ff56] sm:text-xs"
+                      className="mt-5 inline-flex rounded-md px-3 py-2 text-[0.9rem] font-medium text-[var(--page-fg)] transition hover:bg-white/5 hover:text-[#d6ff56] sm:text-xs"
                     >
                       Read More
                     </button>
