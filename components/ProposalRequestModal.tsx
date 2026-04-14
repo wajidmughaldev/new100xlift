@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowUpRight, X } from 'lucide-react'
+import { submitLeadForm } from '@/lib/lead-form'
 
 type ProposalRequestModalProps = {
   isOpen: boolean
@@ -15,6 +16,9 @@ const inputClassName =
 const labelClassName = 'text-sm font-semibold text-[#101408] dark:text-white'
 
 const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -43,6 +47,46 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
   const portalTarget = typeof document === 'undefined' ? null : document.body
 
   if (!portalTarget || !isOpen) return null
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setFeedback(null)
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    try {
+      await submitLeadForm({
+        source: 'proposal-modal',
+        name: String(formData.get('name') || ''),
+        email: String(formData.get('email') || ''),
+        phone: String(formData.get('phone') || ''),
+        company: String(formData.get('company') || ''),
+        website: String(formData.get('website') || ''),
+        projectType: String(formData.get('projectType') || ''),
+        budget: String(formData.get('budget') || ''),
+        timeline: String(formData.get('timeline') || ''),
+        details: String(formData.get('details') || ''),
+      })
+
+      form.reset()
+      setFeedback({
+        type: 'success',
+        message: 'Request sent. Check your inbox for the confirmation email.',
+      })
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Unable to send your request right now.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return createPortal(
     <div
@@ -74,7 +118,7 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
           </p>
         </div>
 
-        <form className="mt-10 space-y-4">
+        <form className="mt-10 space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-2">
               <span className={labelClassName}>Full name</span>
@@ -146,9 +190,20 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
           </label>
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-medium text-[var(--muted-fg)]">
-              No spam. Your details stay private.
-            </p>
+            <div>
+              <p className="text-xs font-medium text-[var(--muted-fg)]">
+                No spam. Your details stay private.
+              </p>
+              {feedback ? (
+                <p
+                  className={`mt-2 text-xs font-semibold ${
+                    feedback.type === 'success' ? 'text-[#5b7b00]' : 'text-red-500'
+                  }`}
+                >
+                  {feedback.message}
+                </p>
+              ) : null}
+            </div>
 
             <div className="flex justify-end gap-3">
               <button
@@ -161,9 +216,10 @@ const ProposalRequestModal = ({ isOpen, onClose }: ProposalRequestModalProps) =>
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="inline-flex h-10 items-center gap-2 rounded-full bg-[#b8ea18] px-5 text-sm font-bold text-[#101408] transition hover:bg-[#cdfb45]"
               >
-                Request Proposal
+                {isSubmitting ? 'Sending...' : 'Request Proposal'}
                 <ArrowUpRight size={16} strokeWidth={2.4} />
               </button>
             </div>

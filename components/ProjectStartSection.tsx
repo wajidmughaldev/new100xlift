@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Send } from 'lucide-react'
 
 import IconStrip from './IconStrip'
+import { submitLeadForm } from '@/lib/lead-form'
 
 const iconItems = [
   { href: 'https://facebook.com', label: 'Facebook', iconSrc: '/icons/facebook.png' },
@@ -18,6 +19,8 @@ const serviceTags = ['Website Development', 'UI/UX Designing', 'SEO/AEO']
 
 const ProjectStartSection = () => {
   const [selectedServices, setSelectedServices] = useState<string[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   const toggleService = (service: string) => {
     setSelectedServices((current) =>
@@ -25,6 +28,46 @@ const ProjectStartSection = () => {
         ? current.filter((item) => item !== service)
         : [...current, service]
     )
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setFeedback(null)
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const phoneCode = String(formData.get('phoneCode') || '')
+    const phoneNumber = String(formData.get('phoneNumber') || '')
+
+    try {
+      await submitLeadForm({
+        source: 'project-start',
+        name: String(formData.get('name') || ''),
+        email: String(formData.get('email') || ''),
+        phone: `${phoneCode} ${phoneNumber}`.trim(),
+        budget: String(formData.get('budget') || ''),
+        details: String(formData.get('details') || ''),
+        services: selectedServices,
+      })
+
+      form.reset()
+      setSelectedServices([])
+      setFeedback({
+        type: 'success',
+        message: 'Request sent. Check your inbox for the confirmation email.',
+      })
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Unable to send your request right now.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -86,7 +129,7 @@ const ProjectStartSection = () => {
               <span className="text-[var(--page-fg)]">We Can Support You With?</span>
             </h2>
 
-            <form className="mt-8 space-y-5 sm:mt-10 sm:space-y-6 lg:mt-12">
+            <form className="mt-8 space-y-5 sm:mt-10 sm:space-y-6 lg:mt-12" onSubmit={handleSubmit}>
               <div>
                 <p className="mb-3 text-[12px] font-medium text-[var(--muted-fg)]">Select Service</p>
                 <div className="flex flex-wrap gap-3">
@@ -113,6 +156,7 @@ const ProjectStartSection = () => {
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Full Name</span>
                   <input
                     type="text"
+                    name="name"
                     defaultValue="Abdul Wajid khan"
                     className="h-10 w-full min-w-0 rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-4 text-[13px] text-[var(--page-fg)] outline-none placeholder:text-[var(--muted-fg)]"
                   />
@@ -121,6 +165,7 @@ const ProjectStartSection = () => {
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Email</span>
                   <input
                     type="email"
+                    name="email"
                     defaultValue="wajid@gmail.com"
                     className="h-10 w-full min-w-0 rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-4 text-[13px] text-[var(--page-fg)] outline-none placeholder:text-[var(--muted-fg)]"
                   />
@@ -131,11 +176,12 @@ const ProjectStartSection = () => {
                 <div className="grid min-w-0 gap-2">
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Phone</span>
                   <div className="grid min-w-0 grid-cols-[84px_minmax(0,1fr)] gap-2 sm:grid-cols-[88px_minmax(0,1fr)]">
-                    <select className="h-10 w-full rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-3 text-[13px] text-[var(--page-fg)] outline-none">
+                    <select name="phoneCode" className="h-10 w-full rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-3 text-[13px] text-[var(--page-fg)] outline-none">
                       <option>+92</option>
                     </select>
                     <input
                       type="text"
+                      name="phoneNumber"
                       defaultValue="311-1960 100"
                       className="h-10 w-full min-w-0 rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-4 text-[13px] text-[var(--page-fg)] outline-none"
                     />
@@ -144,6 +190,7 @@ const ProjectStartSection = () => {
                 <label className="grid min-w-0 gap-2">
                   <span className="text-[12px] font-medium text-[var(--muted-fg)]">Select Budget</span>
                   <select
+                    name="budget"
                     defaultValue="Less Than 100"
                     className="h-10 w-full min-w-0 rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-4 text-[13px] text-[var(--page-fg)] outline-none"
                   >
@@ -161,10 +208,37 @@ const ProjectStartSection = () => {
                 <span className="text-[12px] font-medium text-[var(--muted-fg)]">Brief Overview</span>
                 <textarea
                   rows={5}
+                  name="details"
                   defaultValue="I need a 5 pages Construction website..."
                   className="min-h-[118px] w-full min-w-0 rounded-[8px] border border-[var(--outline-soft)] bg-[var(--panel-strong)] px-4 py-4 text-[13px] text-[var(--page-fg)] outline-none"
                 />
               </label>
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  {feedback ? (
+                    <p
+                      className={`text-xs font-semibold ${
+                        feedback.type === 'success' ? 'text-[#5b7b00]' : 'text-red-500'
+                      }`}
+                    >
+                      {feedback.message}
+                    </p>
+                  ) : (
+                    <p className="text-xs font-medium text-[var(--muted-fg)]">
+                      We will send a confirmation email after submission.
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex h-11 items-center justify-center rounded-full bg-[#BFEF2E] px-5 text-sm font-bold text-[#101408] transition hover:bg-[#cdfb45]"
+                >
+                  {isSubmitting ? 'Sending...' : 'Request Proposal'}
+                </button>
+              </div>
             </form>
           </div>
 

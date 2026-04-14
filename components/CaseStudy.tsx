@@ -11,7 +11,6 @@ import FeatureStrip from './FeatureStrip'
 import SectionIntro from './SectionIntro'
 import PopupShell from './popup/popup-shell'
 import CaseStudyPopupContent from './popup/case-study-popup-content'
-import type { OtherProjectItem } from './popup/showcase-other-projects-slider'
 
 type CaseStudyItem = {
   id: number | string
@@ -105,25 +104,6 @@ const CaseStudy = () => {
   const handleNext = () => {
     if (!swiperRef.current) return
     swiperRef.current.slideNext()
-  }
-
-  const handleOpenOtherProject = (project: OtherProjectItem) => {
-    setSelectedCaseStudy({
-      id: project.id,
-      title: project.title,
-      image: project.image,
-      techLabel: 'Tech Stack',
-      techValue: project.techValue,
-      tags: project.tags,
-      description: project.description,
-    })
-
-    window.requestAnimationFrame(() => {
-      document.querySelector('[role="dialog"]')?.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      })
-    })
   }
 
   const handleClosePopup = () => {
@@ -298,7 +278,6 @@ const CaseStudy = () => {
             techValue={selectedCaseStudy.techValue}
             description={selectedCaseStudy.description}
             heroImage={selectedCaseStudy.image}
-            onOpenOtherProject={handleOpenOtherProject}
           />
         ) : null}
       </PopupShell>
