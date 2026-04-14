@@ -74,13 +74,13 @@ const QuestionsFAQ = ({
               <button
                 type="button"
                 onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                className={`flex w-full items-start justify-between gap-6 text-left ${
+                className={`relative w-full text-left ${
                   isOpen
-                    ? 'rounded-[10px] bg-[linear-gradient(90deg,#9fc800_0%,#5f7608_58%,#273300_100%)] px-5 py-5 sm:px-6 sm:py-6'
+                    ? 'rounded-[10px] bg-[linear-gradient(180deg,#1b1f10_0%,#111406_52%,#0a0a08_100%)] px-5 py-5 text-white sm:px-6 sm:py-6'
                     : 'px-5 py-7 sm:px-6'
                 }`}
               >
-                <div className="pr-3">
+                <div className="w-full pr-12">
                   <h3 className={`text-[22px] leading-[1.2] ${isOpen ? 'font-semibold' : 'font-medium'}`}>
                     {item.question}
                   </h3>
@@ -90,13 +90,13 @@ const QuestionsFAQ = ({
                       isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                     }`}
                   >
-                    <p className={`mt-4 max-w-[690px] overflow-hidden text-[17px] leading-[1.25] ${isOpen ? 'text-white/95' : 'text-[var(--muted-fg)]'}`}>
+                    <p className={`mt-4 w-full overflow-hidden text-[17px] leading-[1.25] ${isOpen ? 'text-white/95' : 'text-[var(--muted-fg)]'}`}>
                       {item.answer}
                     </p>
                   </div>
                 </div>
 
-                <span className="mt-1 shrink-0 text-[#cfff19]">
+                <span className="absolute right-5 top-5 shrink-0 text-[#cfff19] sm:right-6 sm:top-6">
                   {isOpen ? (
                     <CircleMinus size={22} strokeWidth={2.2} />
                   ) : (

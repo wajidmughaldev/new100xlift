@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { House, Moon, Phone, Plus, Sun } from 'lucide-react'
+import { ArrowUpRight, House, Moon, Plus, Sun } from 'lucide-react'
 
+import CalendarBookingModal from './CalendarBookingModal'
+import ProposalRequestModal from './ProposalRequestModal'
 import { useTheme } from './theme-provider'
 import { IconCircleButton } from './ui/icon-circle-button'
 
@@ -20,11 +22,21 @@ const navLinks = [
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [isProposalOpen, setIsProposalOpen] = useState(false)
   const [isStickyActive, setIsStickyActive] = useState(false)
   const isDarkMode = theme === 'dark'
   const logoSrc = isDarkMode ? '/white-logo.svg' : '/black-logo.svg'
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false)
+  const openProposalModal = () => {
+    setIsMobileMenuOpen(false)
+    setIsProposalOpen(true)
+  }
+  const openCalendarModal = () => {
+    setIsMobileMenuOpen(false)
+    setIsCalendarOpen(true)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,14 +114,25 @@ const Navigation = () => {
             </span>
           </IconCircleButton>
 
-          <a href="tel:+923111960100" aria-label="Call us">
-            <IconCircleButton
-              type="button"
-              className="bg-[#314100] text-[#BFEF2E]"
-            >
-              <Phone size={20} strokeWidth={2} />
-            </IconCircleButton>
-          </a>
+          <button
+            type="button"
+            aria-label="Book a calendar appointment"
+            onClick={openCalendarModal}
+            className="inline-flex h-12 items-center gap-2 rounded-full border border-[#BFEF2E]/35 bg-[var(--surface-2)] px-5 text-sm font-bold text-[var(--page-fg)] transition hover:border-[#BFEF2E] hover:text-[#BFEF2E]"
+          >
+            Let&apos;s talk
+            <ArrowUpRight size={18} strokeWidth={2.4} />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Request a proposal"
+            onClick={openProposalModal}
+            className="inline-flex h-12 items-center gap-2 rounded-full bg-[#314100] px-5 text-sm font-bold text-[#BFEF2E] transition hover:bg-[#405600]"
+          >
+            Request a proposal
+            <ArrowUpRight size={18} strokeWidth={2.4} />
+          </button>
         </div>
 
         <button
@@ -132,7 +155,7 @@ const Navigation = () => {
 
       {isMobileMenuOpen ? (
         <div className="fixed inset-0 z-50 bg-[var(--mobile-overlay)] p-4 backdrop-blur-sm md:hidden">
-          <div className="relative flex min-h-full flex-col rounded-[28px] border border-[var(--outline-soft)] bg-[var(--mobile-panel-bg)] px-7 pb-10 pt-7 text-[var(--page-fg)]">
+          <div className="relative flex min-h-full flex-col rounded-[28px] border border-[var(--outline-soft)] bg-[var(--mobile-panel-bg)] px-7 pb-10 pt-7 text-white">
             <div className="flex items-center justify-between">
               <a href="#home" onClick={closeMobileMenu}>
                 <Image
@@ -148,7 +171,7 @@ const Navigation = () => {
               <button
                 type="button"
                 aria-label="Close navigation menu"
-                className="inline-flex size-11 items-center justify-center rounded-full text-[var(--page-fg)]/90"
+                className="inline-flex size-11 items-center justify-center rounded-full text-white/90"
                 onClick={closeMobileMenu}
               >
                 <Plus size={24} strokeWidth={2.2} className="rotate-45" />
@@ -161,7 +184,7 @@ const Navigation = () => {
                   <li key={`mobile-${link.label}`} className="w-full">
                     <a
                       href={link.href}
-                      className="block text-[clamp(2rem,8vw,3rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[var(--page-fg)] transition-colors duration-200 hover:text-[#BFEF2E]"
+                      className="block text-[clamp(2rem,8vw,3rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-white transition-colors duration-200 hover:text-[#BFEF2E]"
                       onClick={closeMobileMenu}
                     >
                       {link.label}
@@ -169,10 +192,37 @@ const Navigation = () => {
                   </li>
                 ))}
               </ul>
+
+              <button
+                type="button"
+                onClick={openCalendarModal}
+                className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#BFEF2E]/50 px-5 py-3 text-sm font-bold text-white"
+              >
+                Let&apos;s talk
+                <ArrowUpRight size={17} strokeWidth={2.4} />
+              </button>
+
+              <button
+                type="button"
+                onClick={openProposalModal}
+                className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#BFEF2E] px-5 py-3 text-sm font-bold text-[#101408]"
+              >
+                Request a proposal
+                <ArrowUpRight size={17} strokeWidth={2.4} />
+              </button>
             </nav>
           </div>
         </div>
       ) : null}
+
+      <ProposalRequestModal
+        isOpen={isProposalOpen}
+        onClose={() => setIsProposalOpen(false)}
+      />
+      <CalendarBookingModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+      />
     </>
   )
 }
