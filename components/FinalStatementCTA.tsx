@@ -5,7 +5,7 @@ import { ArrowUpRight, Phone } from 'lucide-react'
 
 import { CTAButton } from './ui/cta-button'
 
-const highlightClassName = 'bg-[#a8d400] px-2 py-0.5 text-black sm:px-3 sm:py-1'
+const highlightClassName = 'inline bg-[#a8d400] px-2 py-0.5 text-black sm:px-3 sm:py-1'
 
 const FinalStatementCTA = () => {
   const openCalendarModal = () => {
@@ -21,23 +21,25 @@ const FinalStatementCTA = () => {
       <div className="space-y-6">
         <div className="text-[1.95rem] font-normal leading-[1.18] tracking-[-0.05em] sm:text-[2.6rem] md:text-[3.2rem]">
           <div>
-            Your business should not look{' '}
-            <span className={highlightClassName}>smaller, weaker, or</span>
+            <span className={highlightClassName}>
+              Your <strong>business</strong> should not look <strong>smaller</strong>, <strong>weaker</strong>, or
+            </span>
           </div>
           <div className="mt-3">
-            <span className={highlightClassName}>less credible than it is.</span>
+            <span className={highlightClassName}><strong>less credible</strong> than it is.</span>
           </div>
         </div>
 
         <div className="pt-4 text-[1.95rem] font-normal leading-[1.18] tracking-[-0.05em] sm:pt-6 sm:text-[2.6rem] md:text-[3.2rem]">
           <div>
-            If your{' '}
-            <span className={highlightClassName}>website, branding, or digital presence</span>{' '}
-            is
+            <span className={highlightClassName}>
+              If your <strong>website</strong>, <strong>branding</strong>, or <strong>digital presence</strong> is
+            </span>
           </div>
           <div className="mt-3">
-            <span className={highlightClassName}>slowing growth,</span>{' '}
-            let&apos;s fix the parts that matter first.
+            <span className={highlightClassName}>
+              <strong>slowing growth</strong>, let&apos;s fix the parts that <strong>matter first</strong>.
+            </span>
           </div>
         </div>
 

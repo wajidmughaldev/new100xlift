@@ -42,12 +42,12 @@ const ShowcaseFirstSection = ({
   heroImage,
 }: ShowcaseFirstSectionProps) => {
   return (
-    <section className=" px-5 pb-8 pt-8 text-white sm:px-7 lg:px-8">
+    <section className="px-5 pb-8 pt-8 text-[var(--page-fg)] sm:px-7 lg:px-8">
       <div className="mx-auto max-w-[1220px]">
-        <div className="grid gap-7 border-b border-white/10 pb-7">
+        <div className="grid gap-7 border-b border-[var(--outline-soft)] pb-7">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
             <div>
-              <p className="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-white/46">
+              <p className="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--muted-fg)]">
                 Project Overview
               </p>
               <h2 className="mt-3 text-4xl font-bold leading-none tracking-[-0.06em] sm:text-5xl lg:text-6xl">
@@ -56,19 +56,19 @@ const ShowcaseFirstSection = ({
             </div>
 
             <div className="lg:justify-self-end">
-              <p className="max-w-[460px] text-sm font-medium leading-[1.6] text-white/68 sm:text-[0.96rem]">
+              <p className="max-w-[460px] text-sm font-medium leading-[1.6] text-[var(--muted-fg)] sm:text-[0.96rem]">
                 {description}
               </p>
             </div>
           </div>
 
-          <div className="grid gap-4 border-y border-white/10 py-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 border-y border-[var(--outline-soft)] py-5 sm:grid-cols-2 lg:grid-cols-4">
             {metrics.map((metric) => (
               <div key={metric.label} className="text-center lg:text-left">
                 <p className="text-[1.45rem] font-bold tracking-[-0.04em]">
                   {metric.value}
                 </p>
-                <p className="mt-1 text-[0.74rem] font-medium uppercase tracking-[0.12em] text-white/46">
+                <p className="mt-1 text-[0.74rem] font-medium uppercase tracking-[0.12em] text-[var(--muted-fg)]">
                   {metric.label}
                 </p>
               </div>
@@ -76,8 +76,8 @@ const ShowcaseFirstSection = ({
           </div>
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-[22px] border border-white/10 bg-[#111] shadow-[0_30px_80px_rgba(0,0,0,0.32)]">
-          <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#111]">
+        <div className="mt-8 overflow-hidden rounded-[22px] border border-[var(--outline-soft)] bg-[var(--panel-strong)]  dark:shadow-[0_30px_80px_rgba(0,0,0,0.32)]">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-[var(--panel-strong)]">
             <Image
               src={heroImage}
               alt={`${title} case study hero`}
@@ -108,7 +108,7 @@ const ShowcaseFirstSection = ({
           >
             {thumbSlides.map((slide) => (
               <SwiperSlide key={slide.id} className="!h-auto">
-                <article className="overflow-hidden rounded-[14px] border border-white/10">
+                <article className="overflow-hidden rounded-[14px] border border-[var(--outline-soft)] bg-[var(--panel-strong)]">
                   <div className="relative aspect-[16/12] overflow-hidden">
                     <Image
                       src={slide.image}

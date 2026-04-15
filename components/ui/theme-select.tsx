@@ -14,7 +14,7 @@ type ThemeSelectOption = {
 type ThemeSelectProps = {
   value?: string
   onChange: (value: string) => void
-  options: ThemeSelectOption[]
+  options: readonly ThemeSelectOption[]
   placeholder?: string
   error?: boolean
   className?: string
@@ -85,7 +85,7 @@ const ThemeSelect = ({
       {isOpen ? (
         <div
           role="listbox"
-          className="absolute left-0 right-0 top-[calc(100%+0.45rem)] z-50 overflow-hidden rounded-md border border-[var(--outline-soft)] bg-[var(--panel-bg)] p-1 shadow-[0_18px_40px_rgba(0,0,0,0.26)]"
+          className="absolute left-0 right-0 top-[calc(100%+0.45rem)] z-50 max-h-[280px] overflow-y-auto overflow-x-hidden rounded-md border border-[var(--outline-soft)] bg-[var(--panel-bg)] p-1 shadow-[0_18px_40px_rgba(0,0,0,0.26)]"
         >
           {options.map((option) => {
             const isSelected = option.value === value

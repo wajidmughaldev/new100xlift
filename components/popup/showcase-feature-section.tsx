@@ -13,7 +13,7 @@ const ShowcaseFeatureSection = () => {
   return (
     <section className="pb-12 pt-2 text-[var(--page-fg)]">
       <div className="mx-auto max-w-[1220px]">
-        <div className="grid gap-8 rounded-[30px] border border-[var(--outline-soft)] bg-[var(--surface-1)] px-0 py-0 shadow-[0_18px_50px_rgba(20,20,15,0.08)] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-10">
+        <div className="grid gap-8 rounded-[30px] border border-[var(--outline-soft)] bg-[var(--surface-1)] px-0 py-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-10">
           <div className="min-w-0 rounded-[26px] bg-[var(--panel-strong)] p-4 sm:p-5">
             <div className="overflow-hidden rounded-[18px] border border-[var(--outline-soft)] bg-[var(--surface-1)]">
               <div className="relative aspect-[1.05/1] overflow-hidden">

@@ -18,7 +18,7 @@ const CaseStudyPopupContent = ({
   heroImage = '/showcase-images/3.webp',
 }: CaseStudyPopupContentProps) => {
   return (
-    <section className="w-full bg-black py-4 text-white">
+    <section className="rounded-lg w-full bg-[var(--page-bg)] py-4 text-[var(--page-fg)]">
       <ShowcaseFirstSection
         title={`${title}${techValue ? ` - ${techValue}` : ''}`}
         description={description}
