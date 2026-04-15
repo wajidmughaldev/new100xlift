@@ -7,6 +7,7 @@ import { Controller, useForm } from 'react-hook-form'
 import IconStrip from './IconStrip'
 import { submitLeadForm } from '@/lib/lead-form'
 import ThemeSelect from './ui/theme-select'
+import { countryCodeOptions } from '@/lib/country-codes'
 
 const iconItems = [
   { href: 'https://www.facebook.com/profile.php?id=61586106101272', label: 'Facebook', iconSrc: '/icons/facebook.png' },
@@ -18,7 +19,6 @@ const iconItems = [
 ]
 
 const serviceTags = ['Website Development', 'UI/UX Designing', 'SEO/AEO']
-const phoneCodeOptions = [{ label: '+92', value: '+92' }]
 const budgetOptions = [
   { label: 'Less Than 100', value: 'Less Than 100' },
   { label: '100 - 300', value: '100 - 300' },
@@ -63,12 +63,12 @@ const ProjectStartSection = () => {
     delayError: 350,
     defaultValues: {
       services: [],
-      name: 'Abdul Wajid khan',
-      email: 'wajid@gmail.com',
+      name: '',
+      email: '',
       phoneCode: '+92',
-      phoneNumber: '311-1960 100',
+      phoneNumber: '',
       budget: 'Less Than 100',
-      details: 'I need a 5 pages Construction website...',
+      details: '',
     },
   })
 
@@ -225,6 +225,7 @@ const ProjectStartSection = () => {
                   <input
                     type="text"
                     className={inputClass(Boolean(errors.name))}
+                    placeholder="Your full name"
                     {...register('name', {
                       required: 'Full name is required.',
                       minLength: {
@@ -240,6 +241,7 @@ const ProjectStartSection = () => {
                   <input
                     type="email"
                     className={inputClass(Boolean(errors.email))}
+                    placeholder="you@example.com"
                     {...register('email', {
                       required: 'Email is required.',
                       pattern: {
@@ -263,7 +265,7 @@ const ProjectStartSection = () => {
                         <ThemeSelect
                           value={field.value}
                           onChange={field.onChange}
-                          options={phoneCodeOptions}
+                          options={countryCodeOptions}
                           buttonClassName="h-10 px-3"
                         />
                       )}
@@ -271,6 +273,7 @@ const ProjectStartSection = () => {
                     <input
                       type="text"
                       className={inputClass(Boolean(errors.phoneNumber))}
+                      placeholder="336-1815 141"
                       {...register('phoneNumber', {
                         validate: (value) =>
                           !value ||
@@ -308,6 +311,7 @@ const ProjectStartSection = () => {
                 <textarea
                   rows={5}
                   className={`${inputClass(Boolean(errors.details))} min-h-[118px] py-4`}
+                  placeholder="Tell us what you need, what the goal is, and any timeline or platform details."
                   {...register('details', {
                     required: 'Project brief is required.',
                     minLength: {

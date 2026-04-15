@@ -117,7 +117,9 @@ const Navigation = () => {
                   <a
                     href={link.href}
                     className={`inline-flex items-center gap-2 transition-colors duration-200 ${
-                      isActive ? 'text-[#BFEF2E]' : 'text-[var(--page-fg)] hover:text-[#BFEF2E]'
+                      isActive
+                        ? 'text-[#314100] dark:text-[#BFEF2E]'
+                        : 'text-[var(--page-fg)] hover:text-[#314100] dark:hover:text-[#BFEF2E]'
                     }`}
                   >
                     <span>{link.label}</span>
@@ -221,7 +223,7 @@ const Navigation = () => {
                       <a
                         href={link.href}
                         className={`block text-[clamp(2rem,8vw,3rem)] font-semibold leading-[1.02] tracking-[-0.05em] transition-colors duration-200 ${
-                          isActive ? 'text-[#BFEF2E]' : 'text-white hover:text-[#BFEF2E]'
+                          isActive ? 'text-[#BFEF2E]' : 'text-white hover:text-[#d8ff71]'
                         }`}
                         onClick={closeMobileMenu}
                       >

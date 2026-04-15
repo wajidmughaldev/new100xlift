@@ -110,6 +110,8 @@ body {
   font-family: inter, Helvetica, sans-serif;
   overflow-x: hidden;
   cursor: url('/cursor/cursor1.png') 4 4, auto;
+  user-select: none;
+  -webkit-user-select: none;
   transition:
     background-color 220ms ease,
     color 220ms ease;
@@ -128,6 +130,14 @@ select,
 label,
 summary {
   cursor: url('/cursor/cursor2.png') 4 4, pointer;
+}
+
+input,
+textarea,
+select,
+[contenteditable='true'] {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 select {

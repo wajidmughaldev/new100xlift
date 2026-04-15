@@ -73,7 +73,7 @@ const SiteFooter = () => {
                   className={`border-b pb-1 transition-colors ${
                     activeSection === link.href
                       ? 'border-[#BFEF2E] text-[#314100] dark:text-[#BFEF2E]'
-                      : 'border-[#8fb109]'
+                      : 'border-[#8fb109] text-[var(--page-fg)] hover:text-[#314100] dark:hover:text-[#BFEF2E]'
                   }`}
                 >
                   {link.label}
@@ -82,7 +82,7 @@ const SiteFooter = () => {
               <button
                 type="button"
                 onClick={() => setIsOffshoreOpen(true)}
-                className="border-b border-[#8fb109] pb-1"
+                className="border-b border-[#8fb109] pb-1 text-[var(--page-fg)] transition-colors hover:text-[#314100] dark:hover:text-[#BFEF2E]"
               >
                 Offshore
               </button>
