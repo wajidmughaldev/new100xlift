@@ -1,16 +1,25 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import IconStrip from './IconStrip'
 import PopupShell from './popup/popup-shell'
 import OffshorePopupContent from './popup/offshore-popup-content'
 
-const footerLinks = [
-  { href: '#case-studies', label: 'Works' },
-  { href: '#process', label: 'Process' },
-  { href: '#contact', label: 'Contact' },
+type FooterLink = {
+  href: string
+  label: string
+  type: 'section' | 'route'
+}
+
+const footerLinks: FooterLink[] = [
+  { href: '#case-studies', label: 'Works', type: 'section' },
+  { href: '#process', label: 'Process', type: 'section' },
+  { href: '#contact', label: 'Contact', type: 'section' },
+  { href: '/blog', label: 'Blog', type: 'route' },
 ]
 
 const footerIcons = [
@@ -23,32 +32,46 @@ const footerIcons = [
 ]
 
 const SiteFooter = () => {
+  const pathname = usePathname()
   const [isOffshoreOpen, setIsOffshoreOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState(footerLinks[0].href)
-  const sectionIds = useMemo(() => footerLinks.map((link) => link.href.replace('#', '')), [])
+  const [activeSection, setActiveSection] = useState('#case-studies')
+  const sectionLinks = useMemo(() => footerLinks.filter((link) => link.type === 'section'), [])
+  const sectionIds = useMemo(() => sectionLinks.map((link) => link.href.replace('#', '')), [sectionLinks])
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY + 180
-      let currentHref = footerLinks[0].href
+      let currentHref = sectionLinks[0]?.href ?? ''
 
       sectionIds.forEach((id, index) => {
         const section = document.getElementById(id)
         if (!section) return
 
         if (offset >= section.offsetTop) {
-          currentHref = footerLinks[index].href
+          currentHref = sectionLinks[index]?.href ?? currentHref
         }
       })
 
-      setActiveSection(currentHref)
+      if (currentHref) {
+        setActiveSection(currentHref)
+      }
     }
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    if (pathname === '/') {
+      handleScroll()
+      window.addEventListener('scroll', handleScroll, { passive: true })
+    }
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [sectionIds])
+  }, [pathname, sectionIds, sectionLinks])
+
+  const isLinkActive = (link: FooterLink) => {
+    if (link.type === 'route') {
+      return pathname.startsWith(link.href)
+    }
+
+    return pathname === '/' && activeSection === link.href
+  }
 
   return (
     <>
@@ -66,19 +89,35 @@ const SiteFooter = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-5 text-[14px] font-base">
-              {footerLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className={`border-b pb-1 transition-colors ${
-                    activeSection === link.href
-                      ? 'border-[#BFEF2E] text-[#314100] dark:text-[#BFEF2E]'
-                      : 'border-[#8fb109] text-[var(--page-fg)] hover:text-[#314100] dark:hover:text-[#BFEF2E]'
-                  }`}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {footerLinks.map((link) => {
+                const isActive = isLinkActive(link)
+
+                return link.type === 'route' ? (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={`border-b pb-1 transition-colors ${
+                      isActive
+                        ? 'border-[#BFEF2E] text-[#314100] dark:text-[#BFEF2E]'
+                        : 'border-[#8fb109] text-[var(--page-fg)] hover:text-[#314100] dark:hover:text-[#BFEF2E]'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className={`border-b pb-1 transition-colors ${
+                      isActive
+                        ? 'border-[#BFEF2E] text-[#314100] dark:text-[#BFEF2E]'
+                        : 'border-[#8fb109] text-[var(--page-fg)] hover:text-[#314100] dark:hover:text-[#BFEF2E]'
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                )
+              })}
               <button
                 type="button"
                 onClick={() => setIsOffshoreOpen(true)}
@@ -128,3 +167,4 @@ const SiteFooter = () => {
 }
 
 export default SiteFooter
+

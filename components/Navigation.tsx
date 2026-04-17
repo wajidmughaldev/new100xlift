@@ -1,7 +1,9 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ArrowUpRight, Moon, Plus, Sun } from 'lucide-react'
 
 import CalendarBookingModal from './CalendarBookingModal'
@@ -9,25 +11,34 @@ import ProposalRequestModal from './ProposalRequestModal'
 import { useTheme } from './theme-provider'
 import { IconCircleButton } from './ui/icon-circle-button'
 
-const navLinks = [
-  { href: '#services', label: 'Our Services' },
-  { href: '#case-studies', label: 'Case Studies' },
-  { href: '#process', label: 'Our Process' },
-  { href: '#testimonials', label: 'Testimonials' },
-  { href: '#faqs', label: 'Faqs' },
-  { href: '#contact', label: 'Contact' },
+type NavLink = {
+  href: string
+  label: string
+  type: 'section' | 'route'
+}
+
+const navLinks: NavLink[] = [
+  { href: '#services', label: 'Our Services', type: 'section' },
+  { href: '#case-studies', label: 'Case Studies', type: 'section' },
+  { href: '#process', label: 'Our Process', type: 'section' },
+  { href: '#testimonials', label: 'Testimonials', type: 'section' },
+  { href: '#faqs', label: 'Faqs', type: 'section' },
+  { href: '#contact', label: 'Contact', type: 'section' },
+  { href: '/blog', label: 'Blog', type: 'route' },
 ]
 
 const Navigation = () => {
+  const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [isProposalOpen, setIsProposalOpen] = useState(false)
   const [isStickyActive, setIsStickyActive] = useState(false)
-  const [activeSection, setActiveSection] = useState(navLinks[0].href)
+  const [activeSection, setActiveSection] = useState('#services')
   const isDarkMode = theme === 'dark'
   const logoSrc = isDarkMode ? '/white-logo.svg' : '/black-logo.svg'
-  const sectionIds = useMemo(() => navLinks.map((link) => link.href.replace('#', '')), [])
+  const sectionLinks = useMemo(() => navLinks.filter((link) => link.type === 'section'), [])
+  const sectionIds = useMemo(() => sectionLinks.map((link) => link.href.replace('#', '')), [sectionLinks])
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false)
   const openProposalModal = () => {
@@ -44,25 +55,29 @@ const Navigation = () => {
       setIsStickyActive(window.scrollY > 12)
 
       const offset = window.scrollY + 180
-      let currentHref = navLinks[0].href
+      let currentHref = sectionLinks[0]?.href ?? ''
 
       sectionIds.forEach((id, index) => {
         const section = document.getElementById(id)
         if (!section) return
 
         if (offset >= section.offsetTop) {
-          currentHref = navLinks[index].href
+          currentHref = sectionLinks[index]?.href ?? currentHref
         }
       })
 
-      setActiveSection(currentHref)
+      if (currentHref) {
+        setActiveSection(currentHref)
+      }
     }
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    if (pathname === '/') {
+      handleScroll()
+      window.addEventListener('scroll', handleScroll, { passive: true })
+    }
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [sectionIds])
+  }, [pathname, sectionIds, sectionLinks])
 
   useEffect(() => {
     const handleOpenCalendar = () => setIsCalendarOpen(true)
@@ -76,6 +91,21 @@ const Navigation = () => {
       window.removeEventListener('open-proposal-modal', handleOpenProposal)
     }
   }, [])
+
+  const isLinkActive = (link: NavLink) => {
+    if (link.type === 'route') {
+      return pathname.startsWith(link.href)
+    }
+
+    return pathname === '/' && activeSection === link.href
+  }
+
+  const getLinkHref = (link: NavLink) => {
+    if (link.type === 'section') {
+      return `/${link.href}`
+    }
+    return link.href
+  }
 
   return (
     <>
@@ -93,7 +123,7 @@ const Navigation = () => {
               : 'h-[92px] translate-y-0 scale-100 md:h-[120px]'
           } ${isStickyActive ? 'mx-auto w-11/12' : ''}`}
         >
-          <a href="#top" className="shrink-0">
+          <Link href="/" className="shrink-0">
             <Image
               src={logoSrc}
               alt="100XLift logo"
@@ -102,7 +132,7 @@ const Navigation = () => {
               className="h-auto w-32 md:w-40"
               style={{ height: 'auto' }}
             />
-          </a>
+          </Link>
 
           <ul
             className={`hidden list-none items-center gap-6 rounded-full px-8 py-4 transition-colors duration-300 md:flex ${
@@ -110,12 +140,12 @@ const Navigation = () => {
             }`}
           >
             {navLinks.map((link) => {
-              const isActive = activeSection === link.href
+              const isActive = isLinkActive(link)
 
               return (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    href={getLinkHref(link)}
                     className={`inline-flex items-center gap-2 transition-colors duration-200 ${
                       isActive
                         ? 'text-[#314100] dark:text-[#BFEF2E]'
@@ -123,7 +153,7 @@ const Navigation = () => {
                     }`}
                   >
                     <span>{link.label}</span>
-                  </a>
+                  </Link>
                 </li>
               )
             })}
@@ -192,7 +222,7 @@ const Navigation = () => {
         <div className="fixed inset-0 z-50 bg-[var(--mobile-overlay)] p-4 backdrop-blur-sm md:hidden">
           <div className="relative flex min-h-full flex-col rounded-[28px] border border-[var(--outline-soft)] bg-[var(--mobile-panel-bg)] px-7 pb-10 pt-7 text-white">
             <div className="flex items-center justify-between">
-              <a href="#top" onClick={closeMobileMenu}>
+              <Link href="/" onClick={closeMobileMenu}>
                 <Image
                   src={logoSrc}
                   alt="100XLift logo"
@@ -201,7 +231,7 @@ const Navigation = () => {
                   className="h-auto w-28"
                   style={{ height: 'auto' }}
                 />
-              </a>
+              </Link>
 
               <button
                 type="button"
@@ -216,19 +246,19 @@ const Navigation = () => {
             <nav className="flex min-h-[calc(100vh-160px)] flex-col items-center justify-center">
               <ul className="flex w-full flex-col items-center gap-2 text-center">
                 {navLinks.map((link) => {
-                  const isActive = activeSection === link.href
+                  const isActive = isLinkActive(link)
 
                   return (
                     <li key={`mobile-${link.label}`} className="w-full">
-                      <a
-                        href={link.href}
+                      <Link
+                        href={getLinkHref(link)}
                         className={`block text-[clamp(2rem,8vw,3rem)] font-semibold leading-[1.02] tracking-[-0.05em] transition-colors duration-200 ${
                           isActive ? 'text-[#BFEF2E]' : 'text-white hover:text-[#d8ff71]'
                         }`}
                         onClick={closeMobileMenu}
                       >
                         {link.label}
-                      </a>
+                      </Link>
                     </li>
                   )
                 })}
@@ -269,3 +299,4 @@ const Navigation = () => {
 }
 
 export default Navigation
+
