@@ -85,10 +85,6 @@ const API_URL = process.env.WORDPRESS_API_URL;
 const CMS_ORIGIN = API_URL ? new URL(API_URL.trim()).origin : "";
 const CMS_HOST = CMS_ORIGIN ? new URL(CMS_ORIGIN).hostname : "";
 
-if (!API_URL) {
-  throw new Error("WORDPRESS_API_URL is not set in .env.local");
-}
-
 async function wpFetch<T>(endpoint: string): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
     cache: "no-store",
@@ -102,33 +98,40 @@ async function wpFetch<T>(endpoint: string): Promise<T> {
 }
 
 export async function getPosts(): Promise<WPPost[]> {
+  if (!API_URL) return [];
   return wpFetch<WPPost[]>("/posts?_embed&per_page=12&orderby=date&order=desc");
 }
 
 export async function getPostBySlug(slug: string): Promise<WPPost | null> {
+  if (!API_URL) return null;
   const posts = await wpFetch<WPPost[]>(`/posts?slug=${slug}&_embed`);
   return posts.length ? posts[0] : null;
 }
 
 export async function getCategoryBySlug(slug: string): Promise<WPTerm | null> {
+  if (!API_URL) return null;
   const categories = await wpFetch<WPTerm[]>(`/categories?slug=${slug}&per_page=1`);
   return categories.length ? categories[0] : null;
 }
 
 export async function getTagBySlug(slug: string): Promise<WPTerm | null> {
+  if (!API_URL) return null;
   const tags = await wpFetch<WPTerm[]>(`/tags?slug=${slug}&per_page=1`);
   return tags.length ? tags[0] : null;
 }
 
 export async function getCategories(): Promise<WPTerm[]> {
+  if (!API_URL) return [];
   return wpFetch<WPTerm[]>("/categories?per_page=100&orderby=name&order=asc");
 }
 
 export async function getTags(): Promise<WPTerm[]> {
+  if (!API_URL) return [];
   return wpFetch<WPTerm[]>("/tags?per_page=100&orderby=name&order=asc");
 }
 
 export async function getPostsByCategorySlug(slug: string): Promise<{ term: WPTerm | null; posts: WPPost[] }> {
+  if (!API_URL) return { term: null, posts: [] };
   const category = await getCategoryBySlug(slug);
   if (!category) return { term: null, posts: [] };
 
@@ -139,6 +142,7 @@ export async function getPostsByCategorySlug(slug: string): Promise<{ term: WPTe
 }
 
 export async function getPostsByTagSlug(slug: string): Promise<{ term: WPTerm | null; posts: WPPost[] }> {
+  if (!API_URL) return { term: null, posts: [] };
   const tag = await getTagBySlug(slug);
   if (!tag) return { term: null, posts: [] };
 
