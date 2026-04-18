@@ -81,12 +81,24 @@ export type BlogMappedPost = {
   tags: WPTaxonomyItem[];
 };
 
-const API_URL = process.env.WORDPRESS_API_URL;
-const CMS_ORIGIN = API_URL ? new URL(API_URL.trim()).origin : "";
+const DEFAULT_WP_API_URL = "https://cms.100xlift.com/wp-json/wp/v2";
+
+function normalizeApiBaseUrl(raw?: string): string {
+  const normalized = (raw || "").trim().replace(/\/+$/, "");
+  return normalized;
+}
+
+const API_URL = normalizeApiBaseUrl(
+  process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL || DEFAULT_WP_API_URL
+);
+const CMS_ORIGIN = API_URL ? new URL(API_URL).origin : "";
 const CMS_HOST = CMS_ORIGIN ? new URL(CMS_ORIGIN).hostname : "";
 
 async function wpFetch<T>(endpoint: string): Promise<T> {
-  const res = await fetch(`${API_URL}${endpoint}`, {
+  const safeEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const requestUrl = `${API_URL}${safeEndpoint}`;
+
+  const res = await fetch(requestUrl, {
     cache: "no-store",
   });
 

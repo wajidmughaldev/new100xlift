@@ -9,7 +9,8 @@ export default async function BlogArchivePage() {
   try {
     const wpPosts = await getPosts()
     posts = wpPosts.map(mapWPPostToBlogPost)
-  } catch {
+  } catch (error) {
+    console.error('Blog archive fetch failed:', error)
     posts = []
   }
 
